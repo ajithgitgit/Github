@@ -26,13 +26,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}  # Store DockerHub password in GitHub Secrets
 
     # Step 4: Install Trivy using the official install script
-    - name: Install Trivy
-      run: |
-        curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/master/contrib/install.sh | sh
-        # Add Trivy's installation directory to the PATH
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
-        # Verify Trivy installation
-        trivy --version
+
 
     # Step 5: Build Docker image
     - name: Build Docker image
