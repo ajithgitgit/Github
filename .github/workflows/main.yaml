@@ -24,7 +24,11 @@ jobs:
       with:
         username: ${{ secrets.DOCKER_USERNAME }}  # Store DockerHub username in GitHub Secrets
         password: ${{ secrets.DOCKER_PASSWORD }}  # Store DockerHub password in GitHub Secrets
-
+    - name: Install Trivy
+      run: |
+        curl -sSL https://github.com/aquasecurity/trivy/releases/download/v0.30.0/trivy_0.30.0_Linux-x86_64.deb -o trivy.deb
+        sudo dpkg -i trivy.deb
+        rm trivy.deb
     # Step 4: Build Docker image
     - name: Build Docker image
       run: |
