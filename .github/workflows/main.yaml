@@ -29,8 +29,9 @@ jobs:
     - name: Build Docker image
       run: |
         docker build -t myapp:$GITHUB_SHA .
-        docker tag myapp:$GITHUB_SHA mydockerhub/myapp:$GITHUB_SHA
-        docker push mydockerhub/myapp:$GITHUB_SHA  # Push image to Docker Hub
+        docker tag myapp:$GITHUB_SHA rtx3osie/myapp:$GITHUB_SHA
+        docker push rtx3osie/myapp:$GITHUB_SHA  # Push image to Docker Hub
+
 
     # Step 5: Run Static Application Security Testing (SAST) - Example with SonarQube
     # You can enable SAST here if you need
