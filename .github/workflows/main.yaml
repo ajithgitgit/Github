@@ -24,47 +24,50 @@ jobs:
       with:
         username: ${{ secrets.DOCKER_USERNAME }}  # Store DockerHub username in GitHub Secrets
         password: ${{ secrets.DOCKER_PASSWORD }}  # Store DockerHub password in GitHub Secrets
+
+    # Step 4: Install Trivy using the official install script
     - name: Install Trivy
       run: |
-        curl -sSL https://github.com/aquasecurity/trivy/releases/download/v0.30.0/trivy_0.30.0_Linux-x86_64.deb -o trivy.deb
-        sudo dpkg -i trivy.deb
-        rm trivy.deb
-    # Step 4: Build Docker image
+        curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/master/contrib/install.sh | sh
+
+    # Step 5: Build Docker image
     - name: Build Docker image
       run: |
         docker build -t myapp:$GITHUB_SHA .
         docker tag myapp:$GITHUB_SHA rtx3osie/myapp:$GITHUB_SHA
         docker push rtx3osie/myapp:$GITHUB_SHA  # Push image to Docker Hub
 
-
-    # Step 5: Run Static Application Security Testing (SAST) - Example with SonarQube
+    # Step 6: Run Static Application Security Testing (SAST) - Example with SonarQube
     # You can enable SAST here if you need
 
-    # Step 6: Run Container Vulnerability Scanning (Trivy)
+    # Step 7: Run Container Vulnerability Scanning (Trivy)
     - name: Run Trivy container scan
       run: |
         trivy image rtx3osie/myapp:$GITHUB_SHA
 
-    # Step 7: Set up AWS CLI (to interact with AWS services)
+    # Step 8: Set up AWS CLI (to interact with AWS services)
     - name: Set up AWS CLI
       uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
+        
+    # Step 9: Install kubectl
     - name: Install kubectl
       uses: azure/setup-kubectl@v2.0
       with:
         version: 'v1.24.0' # default is latest stable
       id: install
-    # Step 8: Set up kubectl for EKS
+
+    # Step 10: Set up kubectl for EKS
     - name: Set up kubectl
       uses: azure/k8s-set-context@v1 # Change to v1 (stable version)
       with:
         cluster-name: ${{ secrets.EKS_CLUSTER_NAME }}  # EKS Cluster Name (stored in Secrets)
         region: ${{ secrets.AWS_REGION }}             # AWS Region (stored in Secrets)
 
-    # Step 9: Helm Deploy to Kubernetes on EKS
+    # Step 11: Helm Deploy to Kubernetes on EKS
     - name: Helm Deploy to Kubernetes
       run: |
         helm upgrade --install myapp ./helm-chart --set image.tag=$GITHUB_SHA
