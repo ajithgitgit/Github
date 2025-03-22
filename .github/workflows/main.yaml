@@ -54,7 +54,7 @@ jobs:
       id: install
     # Step 8: Set up kubectl for EKS
     - name: Set up kubectl
-      uses: kodermax/azure/k8s-set-context@v1 # Change to v1 (stable version)
+      uses: azure/k8s-set-context@v1 # Change to v1 (stable version)
       with:
         cluster-name: ${{ secrets.EKS_CLUSTER_NAME }}  # EKS Cluster Name (stored in Secrets)
         region: ${{ secrets.AWS_REGION }}             # AWS Region (stored in Secrets)
