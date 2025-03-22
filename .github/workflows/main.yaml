@@ -39,7 +39,7 @@ jobs:
     # Step 6: Run Container Vulnerability Scanning (Trivy)
     - name: Run Trivy container scan
       run: |
-        trivy image mydockerhub/myapp:$GITHUB_SHA
+        trivy image rtx3osie/myapp:$GITHUB_SHA
 
     # Step 7: Set up AWS CLI (to interact with AWS services)
     - name: Set up AWS CLI
