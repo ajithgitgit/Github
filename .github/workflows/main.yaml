@@ -1,0 +1,60 @@
+name: CI/CD Pipeline with Security and Compliance
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # Build Docker image
+    - name: Build Docker image
+      run: |
+        docker build -t myapp:latest .
+
+    # Static Analysis (SAST)
+    - name: Run SAST (SonarQube)
+      run: |
+        docker run -e SONAR_TOKEN=${{ secrets.SONAR_TOKEN }} sonarsource/sonar-scanner-cli
+
+    # Container Image Vulnerability Scanning (Trivy)
+    - name: Scan Docker Image for Vulnerabilities
+      run: |
+        trivy image myapp:latest
+
+    # Deploy application to Kubernetes using Helm
+    - name: Deploy to Kubernetes
+      run: |
+        helm upgrade --install myapp ./chart --set image.tag=latest
+
+  security:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install OWASP ZAP
+      run: |
+        apt-get update
+        apt-get install -y zaproxy
+
+    # DAST scan with OWASP ZAP
+    - name: Run DAST with OWASP ZAP
+      run: |
+        zap-baseline.py -t http://myapp:8080
+
+  compliance:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check AWS Security Hub Compliance
+      run: |
+        aws securityhub describe-standards --region us-west-2
+
