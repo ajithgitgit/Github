@@ -32,6 +32,7 @@ jobs:
         docker tag myapp:$GITHUB_SHA mydockerhub/myapp:$GITHUB_SHA
         docker push mydockerhub/myapp:$GITHUB_SHA  # Push image to Docker Hub
 
+    # Step 5: Run Static Application Security Testing (SAST) - Example with SonarQube
 
 
     # Step 6: Run Container Vulnerability Scanning (Trivy)
@@ -47,9 +48,9 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
 
-    # Step 8: Set up Kubernetes CLI (kubectl) for EKS
+    # Step 8: Set up kubectl for EKS
     - name: Set up kubectl
-      uses: aws-actions/amazon-eks-kubeconfig-action@v1
+      uses: aws-actions/amazon-eks-kubeconfig-action@v1.0.0  # Ensure this is the correct version
       with:
         cluster-name: ${{ secrets.EKS_CLUSTER_NAME }}  # EKS Cluster Name (stored in Secrets)
         region: ${{ secrets.AWS_REGION }}             # AWS Region (stored in Secrets)
@@ -58,4 +59,3 @@ jobs:
     - name: Helm Deploy to Kubernetes
       run: |
         helm upgrade --install myapp ./helm-chart --set image.tag=$GITHUB_SHA
-
