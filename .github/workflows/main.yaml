@@ -29,7 +29,7 @@ jobs:
     - name: Install Trivy
       run: |
         curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/master/contrib/install.sh | sh
-        # Add trivy to PATH
+        # Add Trivy's installation directory to the PATH
         echo "$HOME/.local/bin" >> $GITHUB_PATH
         # Verify Trivy installation
         trivy --version
